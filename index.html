@@ -49,7 +49,176 @@
             { name: "Monkey Clicker", path: "./monkey-clicker/index.html" },
             { name: "Cookie Clicker", path: "./cookie-clicker/index.html" },
             { name: "Retro Bowl", path: "./retro-bowl/index.html" },
+            <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Google Docs</title>
+    <link rel="icon" href="https://ssl.gstatic.com/docs/documents/images/kix-favicon7.ico">
+    <style>
+        :root { --bg: #0b0b0b; --side: #121212; --accent: #4CAF50; --text: #efefef; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); margin: 0; display: flex; height: 100vh; overflow: hidden; }
+        #sidebar { width: 240px; background: var(--side); border-right: 1px solid #222; display: flex; flex-direction: column; padding: 20px 10px; flex-shrink: 0; overflow-y: auto; }
+        #main { flex-grow: 1; display: flex; flex-direction: column; }
+        #top-nav { background: #121212; padding: 10px 20px; border-bottom: 1px solid #222; display: flex; gap: 10px; }
+        #search { flex-grow: 1; background: #1a1a1a; border: 1px solid #333; padding: 10px; border-radius: 6px; color: white; }
+        #game-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; padding: 20px; overflow-y: auto; }
+        .game-card { background: #1e1e1e; border: 1px solid #333; padding: 15px; border-radius: 10px; cursor: pointer; text-align: center; transition: 0.2s; font-size: 13px; }
+        .game-card:hover { border-color: var(--accent); transform: translateY(-3px); }
+        #player { display: none; flex-grow: 1; background: black; position: relative; }
+        iframe { width: 100%; height: 100%; border: none; }
+        #close { position: absolute; top: 10px; right: 10px; background: #b71c1c; color: white; border: none; padding: 8px; cursor: pointer; border-radius: 5px; z-index: 100; }
+    </style>
+</head>
+<body onload="renderGames()">
+    <div id="sidebar">
+        <h2 style="color:var(--accent); margin-left:10px;">PROJECT HUB</h2>
+        <button onclick="location.reload()" style="background:none; border:1px solid #333; color:white; padding:10px; cursor:pointer; border-radius:5px;">🏠 Home</button>
+    </div>
+    <div id="main">
+        <div id="top-nav">
+            <input type="text" id="search" placeholder="Search 100+ games..." oninput="renderGames()">
+            <button onclick="window.location.replace('https://classroom.google.com')" style="background:#b71c1c; border:none; color:white; padding:10px; border-radius:5px; cursor:pointer;">PANIC (ESC)</button>
+        </div>
+        <div id="game-grid"></div>
+        <div id="player">
+            <button id="close" onclick="closeGame()">CLOSE [X]</button>
+            <iframe id="view" sandbox="allow-scripts allow-same-origin allow-forms allow-pointer-lock"></iframe>
+        </div>
+    </div>
+
+    <script>
+        // --- ADD YOUR GAMES HERE ---
+        // Just add a new line for every folder you upload to GitHub
+        const gameList = [
+            { name: "Vex 3", path: "./vex3/index.html" },
+            { name: "Vex 4", path: "./vex4/index.html" },
+            { name: "Vex 5", path: "./vex5/index.html" },
+            { name: "Slope", path: "./slope/index.html" },
+            { name: "1v1.LOL", path: "./1v1lol/index.html" },
+            { name: "Subway Surfers", path: "./subway-surfers/index.html" },
+            { name: "Monkey Clicker", path: "./monkey-clicker/index.html" },
+            { name: "Cookie Clicker", path: "./cookie-clicker/index.html" },
+            { name: "Retro Bowl", path: "./retro-bowl/index.html" },
             { name: "BitLife", path: "./bitlife/index.html" }
+        <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Google Docs</title>
+    <link rel="icon" href="https://ssl.gstatic.com/docs/documents/images/kix-favicon7.ico">
+    <style>
+        :root { --bg: #0b0b0b; --side: #121212; --accent: #4CAF50; --text: #efefef; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); margin: 0; display: flex; height: 100vh; overflow: hidden; }
+        #sidebar { width: 240px; background: var(--side); border-right: 1px solid #222; display: flex; flex-direction: column; padding: 20px 10px; flex-shrink: 0; overflow-y: auto; }
+        #main { flex-grow: 1; display: flex; flex-direction: column; }
+        #top-nav { background: #121212; padding: 10px 20px; border-bottom: 1px solid #222; display: flex; gap: 10px; }
+        #search { flex-grow: 1; background: #1a1a1a; border: 1px solid #333; padding: 10px; border-radius: 6px; color: white; }
+        #game-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; padding: 20px; overflow-y: auto; }
+        .game-card { background: #1e1e1e; border: 1px solid #333; padding: 15px; border-radius: 10px; cursor: pointer; text-align: center; transition: 0.2s; font-size: 13px; }
+        .game-card:hover { border-color: var(--accent); transform: translateY(-3px); }
+        #player { display: none; flex-grow: 1; background: black; position: relative; }
+        iframe { width: 100%; height: 100%; border: none; }
+        #close { position: absolute; top: 10px; right: 10px; background: #b71c1c; color: white; border: none; padding: 8px; cursor: pointer; border-radius: 5px; z-index: 100; }
+    </style>
+</head>
+<body onload="renderGames()">
+    <div id="sidebar">
+        <h2 style="color:var(--accent); margin-left:10px;">PROJECT HUB</h2>
+        <button onclick="location.reload()" style="background:none; border:1px solid #333; color:white; padding:10px; cursor:pointer; border-radius:5px;">🏠 Home</button>
+    </div>
+    <div id="main">
+        <div id="top-nav">
+            <input type="text" id="search" placeholder="Search 100+ games..." oninput="renderGames()">
+            <button onclick="window.location.replace('https://classroom.google.com')" style="background:#b71c1c; border:none; color:white; padding:10px; border-radius:5px; cursor:pointer;">PANIC (ESC)</button>
+        </div>
+        <div id="game-grid"></div>
+        <div id="player">
+            <button id="close" onclick="closeGame()">CLOSE [X]</button>
+            <iframe id="view" sandbox="allow-scripts allow-same-origin allow-forms allow-pointer-lock"></iframe>
+        </div>
+    </div>
+
+    <script>
+        // --- ADD YOUR GAMES HERE ---
+        // Just add a new line for every folder you upload to GitHub
+        const gameList = [
+            { name: "Vex 3", path: "./vex3/index.html" },
+            { name: "Vex 4", path: "./vex4/index.html" },
+            { name: "Vex 5", path: "./vex5/index.html" },
+            { name: "Slope", path: "./slope/index.html" },
+            { name: "1v1.LOL", path: "./1v1lol/index.html" },
+            { name: "Subway Surfers", path: "./subway-surfers/index.html" },
+            { name: "Monkey Clicker", path: "./monkey-clicker/index.html" },
+            { name: "Cookie Clicker", path: "./cookie-clicker/index.html" },
+            { name: "Retro Bowl", path: "./retro-bowl/index.html" },
+            { name: "BitLife", path: "./bitlife/index.html" }
+            { name: "Drift Boss", path: "./Drift-Boss/index.html" }
+            // Add more here...
+        ];
+
+        function renderGames() {
+            const grid = document.getElementById('game-grid');
+            const term = document.getElementById('search').value.toLowerCase();
+            grid.innerHTML = '';
+
+            gameList.filter(g => g.name.toLowerCase().includes(term)).forEach(g => {
+                const card = document.createElement('div');
+                card.className = 'game-card';
+                card.innerText = g.name;
+                card.onclick = () => {
+                    document.getElementById('game-grid').style.display = 'none';
+                    document.getElementById('player').style.display = 'flex';
+                    document.getElementById('view').src = g.path;
+                };
+                grid.appendChild(card);
+            });
+        }
+
+        function closeGame() {
+            document.getElementById('view').src = '';
+            document.getElementById('player').style.display = 'none';
+            document.getElementById('game-grid').style.display = 'grid';
+        }
+
+        setInterval(() => { document.title = "Google Docs"; }, 100);
+        document.addEventListener('keydown', (e) => { if(e.key === "Escape") window.location.replace("https://classroom.google.com"); });
+    </script>
+</body>
+</html>
+            // Add more here...
+
+        ];
+
+        function renderGames() {
+            const grid = document.getElementById('game-grid');
+            const term = document.getElementById('search').value.toLowerCase();
+            grid.innerHTML = '';
+
+            gameList.filter(g => g.name.toLowerCase().includes(term)).forEach(g => {
+                const card = document.createElement('div');
+                card.className = 'game-card';
+                card.innerText = g.name;
+                card.onclick = () => {
+                    document.getElementById('game-grid').style.display = 'none';
+                    document.getElementById('player').style.display = 'flex';
+                    document.getElementById('view').src = g.path;
+                };
+                grid.appendChild(card);
+            });
+        }
+
+        function closeGame() {
+            document.getElementById('view').src = '';
+            document.getElementById('player').style.display = 'none';
+            document.getElementById('game-grid').style.display = 'grid';
+        }
+
+        setInterval(() => { document.title = "Google Docs"; }, 100);
+        document.addEventListener('keydown', (e) => { if(e.key === "Escape") window.location.replace("https://classroom.google.com"); });
+    </script>
+</body>
+</html>
             // Add more here...
         ];
 
