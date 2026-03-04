@@ -31,7 +31,7 @@
         body, html { margin: 0; padding: 0; width: 100%; height: 100%; background: var(--bg); overflow: hidden; display: flex; transition: background 0.3s ease; }
         body { font-family: 'Segoe UI', sans-serif; color: var(--text); }
 
-        #sidebar { width: 260px; background: var(--side); border-right: 1px solid var(--border); display: flex; flex-direction: column; padding: 15px 10px; flex-shrink: 0; overflow-y: auto; transition: background 0.3s ease; }
+        #sidebar { width: 260px; background: var(--side); border-right: 1px solid var(--border); display: flex; flex-direction: column; padding: 15px 10px; flex-shrink: 0; overflow-y: auto; transition: background 0.3s ease; position: relative; }
         .side-btn { background: none; border: none; color: var(--text); opacity: 0.7; text-align: left; padding: 12px; cursor: pointer; border-radius: 8px; font-size: 14px; transition: 0.2s; margin-bottom: 5px; width: 100%; }
         .side-btn:hover, .side-btn.active { background: var(--border); opacity: 1; color: var(--accent); }
         h2 { font-size: 11px; color: #888; text-transform: uppercase; margin: 15px 0 8px 10px; letter-spacing: 1px; }
@@ -54,36 +54,66 @@
 
         #player-container { display: none; flex-grow: 1; background: black; width: 100%; position: relative; }
         iframe { width: 100%; height: 100%; border: none; display: block; }
+
+        /* Lock Screen Styles */
+        #lock-screen { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--side); display: none; flex-direction: column; align-items: center; justify-content: center; z-index: 100; padding: 20px; }
+        #pin-display { font-size: 24px; letter-spacing: 10px; margin-bottom: 20px; height: 30px; color: var(--accent); }
+        .keypad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; width: 100%; }
+        .key { background: var(--card); border: 1px solid var(--border); color: var(--text); padding: 15px; border-radius: 8px; cursor: pointer; font-size: 18px; text-align: center; }
+        .key:hover { background: var(--border); }
     </style>
 </head>
 <body onload="init()">
 
     <div id="sidebar">
-        <h1 style="color:var(--accent); margin-left:10px; font-size:22px; margin-bottom:20px;">Project 404</h1>
-        <button id="home-btn" class="side-btn active" onclick="goHome()">Home</button>
-        
-        <div class="config-box">
-            <h2>Appearance</h2>
-            <button class="config-save-btn" style="background:#555;" onclick="toggleTheme()">Switch Light/Dark Mode</button>
+        <div id="sidebar-content">
+            <h1 style="color:var(--accent); margin-left:10px; font-size:22px; margin-bottom:20px;">Project 404</h1>
+            <button id="home-btn" class="side-btn active" onclick="goHome()">Home</button>
+            
+            <div class="config-box">
+                <h2>Appearance</h2>
+                <button class="config-save-btn" style="background:#555;" onclick="toggleTheme()">Switch Light/Dark Mode</button>
+            </div>
+
+            <div class="config-box">
+                <h2>History Runner</h2>
+                <button class="config-save-btn" style="background:#673AB7;" onclick="runHistoryCloak()">Open in Blank Tab</button>
+            </div>
+
+            <div class="config-box">
+                <h2>Personal Records</h2>
+                <textarea id="records-input" class="config-input" style="height: 60px; resize: none;" placeholder="Slope: 500&#10;Drift: 1200"></textarea>
+                <button class="config-save-btn" style="background:#2196F3;" onclick="saveRecords()">Save Records</button>
+            </div>
+
+            <div class="config-box">
+                <h2>Tab Settings</h2>
+                <input type="text" id="cloak-name" class="config-input" placeholder="Custom Tab Name">
+                <input type="text" id="cloak-url" class="config-input" placeholder="Website URL for Icon">
+                <input type="text" id="panic-url-input" class="config-input" placeholder="Redirect Link (e.g. google.com)">
+                <button class="config-save-btn" onclick="saveSettings()">https://</button>
+            </div>
+
+            <button class="side-btn" style="margin-top:20px; border:1px solid #444;" onclick="lockSidebar()">Lock Sidebar</button>
         </div>
 
-        <div class="config-box">
-            <h2>History Runner</h2>
-            <button class="config-save-btn" style="background:#673AB7;" onclick="runHistoryCloak()">Open in Blank Tab</button>
-        </div>
-
-        <div class="config-box">
-            <h2>Personal Records</h2>
-            <textarea id="records-input" class="config-input" style="height: 60px; resize: none;" placeholder="Slope: 500&#10;Drift: 1200"></textarea>
-            <button class="config-save-btn" style="background:#2196F3;" onclick="saveRecords()">Save Records</button>
-        </div>
-
-        <div class="config-box">
-            <h2>Tab Settings</h2>
-            <input type="text" id="cloak-name" class="config-input" placeholder="Custom Tab Name">
-            <input type="text" id="cloak-url" class="config-input" placeholder="Website URL for Icon">
-            <input type="text" id="panic-url-input" class="config-input" placeholder="Redirect Link (e.g. google.com)">
-            <button class="config-save-btn" onclick="saveSettings()">https://</button>
+        <div id="lock-screen">
+            <h2 style="margin-bottom:20px;">Locked</h2>
+            <div id="pin-display"></div>
+            <div class="keypad">
+                <div class="key" onclick="pressKey('1')">1</div>
+                <div class="key" onclick="pressKey('2')">2</div>
+                <div class="key" onclick="pressKey('3')">3</div>
+                <div class="key" onclick="pressKey('4')">4</div>
+                <div class="key" onclick="pressKey('5')">5</div>
+                <div class="key" onclick="pressKey('6')">6</div>
+                <div class="key" onclick="pressKey('7')">7</div>
+                <div class="key" onclick="pressKey('8')">8</div>
+                <div class="key" onclick="pressKey('9')">9</div>
+                <div class="key" onclick="pressKey('C')" style="color:#ff5555;">C</div>
+                <div class="key" onclick="pressKey('0')">0</div>
+                <div class="key" onclick="pressKey('E')" style="color:var(--accent);">OK</div>
+            </div>
         </div>
     </div>
 
@@ -91,7 +121,7 @@
         <div id="top-nav">
             <input type="text" id="search" placeholder="Search for games..." oninput="renderGames()">
             <button class="util-btn" onclick="toggleFullscreen()">Fullscreen</button>
-            <button class="panic-btn" onclick="panic()">CTRL+SHIFT+ESC</button>
+            <button class="panic-btn" onclick="panic()">ALT+SEARCH+ESC</button>
         </div>
 
         <div id="content-area">
@@ -125,6 +155,42 @@
             { name: "Big Neon Tower Tiny Square", path: "./games/BNTTS/index.html" },
             { name: "Cookie Clicker", path: "./CC/index.html" }
         ];
+
+        let currentPin = "";
+        const correctPin = "404";
+
+        function lockSidebar() {
+            localStorage.setItem('jettLocked', 'true');
+            document.getElementById('sidebar-content').style.display = 'none';
+            document.getElementById('lock-screen').style.display = 'flex';
+        }
+
+        function unlockSidebar() {
+            localStorage.setItem('jettLocked', 'false');
+            document.getElementById('sidebar-content').style.display = 'block';
+            document.getElementById('lock-screen').style.display = 'none';
+            currentPin = "";
+            updatePinDisplay();
+        }
+
+        function pressKey(num) {
+            if (num === 'C') {
+                currentPin = "";
+            } else if (num === 'E') {
+                if (currentPin === correctPin) unlockSidebar();
+                else {
+                    currentPin = "";
+                    alert("Incorrect Code");
+                }
+            } else {
+                if (currentPin.length < 4) currentPin += num;
+            }
+            updatePinDisplay();
+        }
+
+        function updatePinDisplay() {
+            document.getElementById('pin-display').innerText = "*".repeat(currentPin.length);
+        }
 
         function toggleTheme() {
             const current = document.body.getAttribute('data-theme');
@@ -206,6 +272,7 @@
             applySettings();
             loadRecords();
             loadTheme();
+            if (localStorage.getItem('jettLocked') === 'true') lockSidebar();
             setInterval(applySettings, 1000);
         }
 
@@ -246,8 +313,7 @@
         }
 
         document.addEventListener('keydown', (e) => { 
-            // Trigger on Ctrl + Shift + Escape
-            if (e.key === "Escape" && e.ctrlKey && e.shiftKey) {
+            if (e.key === "Escape" && e.altKey && e.metaKey) {
                 panic();
             }
         });
