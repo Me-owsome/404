@@ -44,7 +44,8 @@
         #top-nav { height: 60px; background: var(--side); padding: 0 20px; display: flex; gap: 10px; align-items: center; border-bottom: 1px solid var(--border); flex-shrink: 0; }
         #search { flex-grow: 1; background: var(--card); border: 1px solid var(--border); padding: 10px; border-radius: 6px; color: var(--text); outline: none; }
         
-        .panic-btn { background: #b71c1c; color: white; border: none; padding: 10px 15px; border-radius: 6px; cursor: pointer; font-weight: bold; }
+        /* New Toggle Button - Hidden by default */
+        .fs-toggle-btn { background: var(--accent); color: white; border: none; padding: 10px 15px; border-radius: 6px; cursor: pointer; font-weight: bold; display: none; }
 
         #content-area { flex-grow: 1; overflow-y: auto; padding: 20px; }
         #game-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 15px; }
@@ -53,13 +54,8 @@
 
         #player-container { 
             display: none; 
-            width: 100vw; 
-            height: 100vh; 
+            flex-grow: 1;
             background: black; 
-            position: fixed; 
-            top: 0; 
-            left: 0; 
-            z-index: 99999;
         }
         iframe { width: 100%; height: 100%; border: none; }
     </style>
@@ -82,23 +78,23 @@
 
         <div class="config-box">
             <h2>Personal Records</h2>
-            <textarea id="records-input" class="config-input" style="height: 60px; resize: none;" placeholder="Slope: 500&#10;Drift: 1200"></textarea>
+            <textarea id="records-input" class="config-input" style="height: 60px; resize: none;" placeholder="Record notes..."></textarea>
             <button class="config-save-btn" style="background:#2196F3;" onclick="saveRecords()">Save Records</button>
         </div>
 
         <div class="config-box">
             <h2>Tab Settings</h2>
             <input type="text" id="cloak-name" class="config-input" placeholder="Custom Tab Name">
-            <input type="text" id="cloak-url" class="config-input" placeholder="Website URL for Icon">
-            <input type="text" id="panic-url-input" class="config-input" placeholder="Redirect Link (e.g. google.com)">
-            <button class="config-save-btn" onclick="saveSettings()">Save Tab Setup</button>
+            <input type="text" id="cloak-url" class="config-input" placeholder="Icon URL">
+            <input type="text" id="panic-url-input" class="config-input" placeholder="Panic URL">
+            <button class="config-save-btn" onclick="saveSettings()">Save Settings</button>
         </div>
     </div>
 
     <div id="main">
         <div id="top-nav">
             <input type="text" id="search" placeholder="Search for games..." oninput="renderGames()">
-            <button class="panic-btn" onclick="panic()">ESC PANIC</button>
+            <button id="fs-btn" class="fs-toggle-btn" onclick="toggleFullScreen()">Type Panic</button>
         </div>
 
         <div id="content-area">
@@ -133,33 +129,32 @@
             { name: "Cookie Clicker", path: "./CC/index.html" }
         ];
 
-        let typedCode = "";
-        const secretKey = "404";
-        let isAuthorizedExit = false;
+        let typedBuffer = "";
+        const panicWord = "PANIC";
 
         function launchGame(path) {
-            isAuthorizedExit = false;
+            document.getElementById('content-area').style.display = 'none';
+            document.getElementById('player-container').style.display = 'block';
+            document.getElementById('fs-btn').style.display = 'block';
+            document.getElementById('game-view').src = path;
+        }
+
+        function toggleFullScreen() {
             const player = document.getElementById('player-container');
-            const view = document.getElementById('game-view');
-            
-            player.style.display = 'block';
-            view.src = path;
-            
-            if (player.requestFullscreen) {
-                player.requestFullscreen();
-            } else if (player.webkitRequestFullscreen) {
-                player.webkitRequestFullscreen();
+            if (!document.fullscreenElement) {
+                player.requestFullscreen().catch(e => console.error(e));
+            } else {
+                document.exitFullscreen();
             }
         }
 
         function goHome() {
-            isAuthorizedExit = true;
-            if (document.fullscreenElement) {
-                document.exitFullscreen();
-            }
+            if (document.fullscreenElement) document.exitFullscreen();
             document.getElementById('game-view').src = '';
             document.getElementById('player-container').style.display = 'none';
-            typedCode = "";
+            document.getElementById('content-area').style.display = 'block';
+            document.getElementById('fs-btn').style.display = 'none';
+            typedBuffer = "";
         }
 
         function panic() { 
@@ -168,28 +163,13 @@
             window.top.location.replace(data.panic.startsWith('http') ? data.panic : 'https://' + data.panic);
         }
 
+        // Key Listener for PANIC word
         document.addEventListener('keydown', (e) => { 
-            if (document.getElementById('player-container').style.display === 'block') {
-                // If they hit Esc, trigger panic.
-                if (e.key === "Escape") {
-                    panic();
-                    return;
-                }
-
-                typedCode += e.key;
-                if (typedCode.endsWith(secretKey)) {
-                    goHome();
-                }
-                if (typedCode.length > 10) typedCode = typedCode.slice(-5);
-            }
-        });
-
-        // Detects if the user exited fullscreen. If not authorized by "404", panic.
-        document.addEventListener('fullscreenchange', () => {
-            const playerVisible = document.getElementById('player-container').style.display === 'block';
-            if (!document.fullscreenElement && playerVisible && !isAuthorizedExit) {
+            typedBuffer += e.key.toUpperCase();
+            if (typedBuffer.endsWith(panicWord)) {
                 panic();
             }
+            if (typedBuffer.length > 10) typedBuffer = typedBuffer.slice(-5);
         });
 
         function renderGames() {
@@ -227,20 +207,10 @@
         }
 
         function saveSettings() {
-            const iconUrl = document.getElementById('cloak-url').value;
-            let panicUrl = document.getElementById('panic-url-input').value || "https://classroom.google.com";
-            let finalIcon = "https://ssl.gstatic.com/docs/documents/images/kix-favicon7.ico";
-            
-            if (iconUrl) {
-                try {
-                    const url = new URL(iconUrl.startsWith('http') ? iconUrl : 'https://' + iconUrl);
-                    finalIcon = `https://www.google.com/s2/favicons?domain=${url.hostname}&sz=64`;
-                } catch(e) {}
-            }
             const settings = {
                 title: document.getElementById('cloak-name').value || "Google Docs",
-                icon: finalIcon,
-                panic: panicUrl
+                icon: document.getElementById('cloak-url').value || "https://ssl.gstatic.com/docs/documents/images/kix-favicon7.ico",
+                panic: document.getElementById('panic-url-input').value || "https://classroom.google.com"
             };
             localStorage.setItem('jettSettings', JSON.stringify(settings));
             applySettings();
@@ -252,7 +222,7 @@
             const data = saved ? JSON.parse(saved) : { title: "Google Docs", icon: "https://ssl.gstatic.com/docs/documents/images/kix-favicon7.ico" };
             document.title = data.title;
             let link = document.querySelector("link[rel*='icon']") || document.createElement('link');
-            link.type = 'image/x-icon'; link.rel = 'shortcut icon'; link.href = data.icon;
+            link.rel = 'shortcut icon'; link.href = data.icon;
             if (!document.querySelector("link[rel*='icon']")) document.head.appendChild(link);
         }
 
