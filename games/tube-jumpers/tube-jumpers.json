@@ -1,20 +1,13 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <title>Tube Jumpers</title>
-    <link rel="icon" type="image/x-icon" href="/tube-jumpers/img/icon.jpg" />
-    <link rel="shortcut icon" type="image/x-icon" href="/tube-jumpers/img/icon.jpg" />
-    <script src='../everypage.js'></script>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="/tube-jumpers/css/style.css" />
-    <script src="/tube-jumpers/js/UnityLoader.js"></script>
-    <script>
-      var gameInstance = UnityLoader.instantiate("gameContainer", "tube-jumpers/tube-jumpers.json");
-    </script>
-  </head>
-  <body style="margin: 0; overflow: hidden;">
-    <div class="webgl-content">
-      <div id="gameContainer" style="width: 100%; height: 100%; margin: 0;"></div>
-    </div>
-  </body>
-</html>
+{
+    "companyName": "Michael Eichler",
+    "productName": "Tube Jumpers",
+    "dataUrl": "unity/TubeJumpers.data.unityweb",
+    "asmCodeUrl": "unity/TubeJumpers.asm.code.unityweb",
+    "asmMemoryUrl": "unity/TubeJumpers.asm.memory.unityweb",
+    "asmFrameworkUrl": "unity/TubeJumpers.asm.framework.unityweb",
+    "TOTAL_MEMORY": 268435456,
+    "graphicsAPI": ["WebGL 2.0", "WebGL 1.0"],
+    "webglContextAttributes": { "preserveDrawingBuffer": false },
+    "splashScreenStyle": "Dark",
+    "backgroundColor": "black"
+  }
